@@ -22,10 +22,10 @@ function calculateWinner(squares) {
         [2, 4, 6],
     ]
 
-    for(let line of lines) {
+    for (let line of lines) {
         const [a, b, c] = line
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-          return squares[a]
+            return squares[a]
         }
     }
     return null
@@ -70,7 +70,9 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
+                i: null
             }],
+            stepNumber: 0,
             xIsNext: true,
         }
     }
@@ -79,38 +81,60 @@ class Game extends React.Component {
         const history = this.state.history
         const current = history[history.length - 1]
         const squares = current.squares.slice()
-        if(calculateWinner(squares) || squares[i]) return
+        if (calculateWinner(squares) || squares[i]) return
         squares[i] = this.state.xIsNext ? 'X' : 'O'
-        this.setState({ 
+        this.setState({
             history: history.concat([{
-                squares: squares
-              }]),
+                squares: squares,
+                i: i
+            }]),
+            stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
         })
     }
 
+    jumpTo(step) {
+        const history = this.state.history
+        this.setState({
+            history: history.slice(0, step + 1),
+            stepNumber: step,
+            xIsNext: (step % 2) === 0,
+        });
+    }
+
     render() {
         const history = this.state.history
-        const current = history[history.length - 1]
+        const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares)
+
+        const moves = history.map((step, move) => {
+            const square = (history[move].i) ? `Last Move: Box ${history[move].i + 1}` : ""
+            const button = move ? `Go to move #${move}` : 'Go to game start'
+            return (
+                <li key={move}>
+                    <button onClick={() => this.jumpTo(move)}>{button}</button> {square}
+                </li>
+            )
+        })
+
         let status
         if (winner) {
-          status = `Winner: ${winner}`
+            status = `Winner: ${winner}`
         } else {
-          status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`
+            status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`
         }
 
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board 
+                    <Board
                         squares={current.squares}
                         onClick={(i) => this.handleClick(i)}
                     />
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{/* TODO */}</ol>
+                    <ol>{moves}</ol>
                 </div>
             </div>
         )
