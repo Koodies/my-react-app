@@ -21,15 +21,15 @@ body {
     background: #fff;
     border: 1px solid #999;
     float: left;
-    font-size: 24px;
+    font-size: 80px;
     font-weight: bold;
     line-height: 34px;
-    height: 34px;
+    height: 80px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 34px;
+    width: 80px;
   }
   
   .square:focus {
@@ -49,3 +49,33 @@ body {
     margin-left: 20px;
   }
   
+  .container {
+    display: grid;
+    grid-template-columns: 40px auto 300px 40px;
+    grid-template-rows: 25% auto 100px
+  }
+
+  .banner {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row: 1;
+  }
+
+  .main {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .score-board{
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: left;
+  }
+
+  .footer {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row: 3;
+    justify-self: left;
+  }
