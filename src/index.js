@@ -10,6 +10,10 @@ function Square(props) {
     )
 }
 
+function draw(squares) {
+    return !squares.includes(null)
+}
+
 function calculateWinner(squares) {
     const lines = [
         [0, 1, 2],
@@ -103,38 +107,50 @@ class Game extends React.Component {
     }
 
     render() {
+        let noWinner = false
         const history = this.state.history
-        const current = history[this.state.stepNumber];
+        const current = history[this.state.stepNumber]
+        if(this.state.stepNumber === 9)  noWinner = draw(current.squares)
         const winner = calculateWinner(current.squares)
-
         const moves = history.map((step, move) => {
-            const square = (history[move].i) ? `Last Move: Box ${history[move].i + 1}` : ""
+            const square = (history[move].i !== null) ? `Last Move: Box ${history[move].i + 1}` : ""
             const button = move ? `Go to move #${move}` : 'Go to game start'
+            const disable = (this.state.stepNumber === move)
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{button}</button> {square}
+                    <button onClick={() => this.jumpTo(move)} disabled={disable} >{button}</button> {square}
                 </li>
             )
         })
 
         let status
-        if (winner) {
+        if(noWinner) {
+            status = `Draw !`
+        } else if (winner) {
             status = `Winner: ${winner}`
         } else {
             status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`
         }
 
         return (
-            <div className="game">
-                <div className="game-board">
-                    <Board
-                        squares={current.squares}
-                        onClick={(i) => this.handleClick(i)}
-                    />
+            <div className="container">
+                <div className="banner">
+                    <p>THIS IS A BANNER</p>
                 </div>
-                <div className="game-info">
+                <div className="game main">
+                    <div className="game-board ">
+                        <Board
+                            squares={current.squares}
+                            onClick={(i) => this.handleClick(i)}
+                        />
+                    </div>
+                </div>
+                <div className="score-board">
                     <div>{status}</div>
                     <ol>{moves}</ol>
+                </div>
+                <div className="footer">
+                    Source from <a href="https://reactjs.org/tutorial/tutorial.htmls">React</a>, Modified by <a href="https://github.com/Koodies">Koodies</a> 
                 </div>
             </div>
         )
