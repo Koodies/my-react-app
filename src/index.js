@@ -124,10 +124,10 @@ class Game extends React.Component {
         })
 
         let status
-        if(noWinner) {
-            status = `Draw !`
-        } else if (winner) {
+        if(winner) {
             status = `Winner: ${winner}`
+        } else if (noWinner) {
+            status = `Draw !`
         } else {
             status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`
         }
